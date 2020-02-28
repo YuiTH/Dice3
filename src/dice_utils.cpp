@@ -203,6 +203,9 @@ namespace dice::utils {
     }
     int get_single_card_properties(const cq::Target &target, const std::string &character_card_name,
                                    std::string &property) {
+        if (msg::SkillNameReplace.count(property)) {
+            property = msg::SkillNameReplace.at(property);
+        }
         SQLite::Statement st(*db::db,
                              "SELECT value FROM character_cards WHERE qq_id = ? AND card_name = ? AND property = ?");
         st.bind(1, *target.user_id);
