@@ -1,5 +1,6 @@
 #include "dice_nickname_module.h"
 #include <cctype>
+#include <regex>
 #include "cqsdk/cqsdk.h"
 #include "dice_calculator.h"
 #include "dice_exception.h"
@@ -24,33 +25,33 @@ namespace dice {
         if (std::regex_match(ws, m, re)) {
             std::string old_nick = utils::get_nickname(e.target);
             std::string nick_name = cq::utils::ws2s(m[3]);
-            if (m[2].first != m[2].second) {
-                if (nick_name.empty()) {
+            if (m[2].first != m[2].second) { // .nnn
+                if (nick_name.empty()) {// 全随机更名
                     nick_name = utils::format_string("{%name}");
-                } else {
+                } else {// 指定区域更名
                     std::transform(nick_name.begin(), nick_name.end(), nick_name.begin(), [](unsigned char c) {
                         return std::tolower(c);
                     });
                     nick_name = utils::format_string("{%name@{language}}", {{"language", nick_name}});
                 }
             }
-            if (m[1].first == m[1].second || e.message_type == cq::message::PRIVATE) {
+            if (m[1].first == m[1].second || e.message_type == cq::message::PRIVATE) { // .n
                 utils::set_global_nickname(e.target, nick_name);
-            } else {
+            } else { // .nn或者.nnn
                 utils::set_group_nickname(e.target, nick_name);
             }
             if (nick_name.empty()) {
                 dice::msg_queue::MsgQueue.add(
                     e.target,
                     utils::format_string(
-                        msg::GetGlobalMsg("strNickEmpty"),
+                        msg::GetGlobalMsg("strNickEmpty"), // 清空名字
                         {{"old_nick", old_nick},
                          {"is_global",
                           (m[1].first == m[1].second || e.message_type == cq::message::PRIVATE) ? "全局" : ""}}));
             } else {
                 if ((m[1].first == m[1].second && e.message_type == cq::message::PRIVATE
                     || m[1].first != m[1].second && e.message_type != cq::message::PRIVATE) &&
-                        utils::if_card_exist(e.target, nick_name)) {
+                        utils::if_card_exist(e.target, nick_name)) { // 存在对应卡片
                     utils::set_chosen_card(e.target, nick_name);
                     dice::msg_queue::MsgQueue.add(
                         e.target,
@@ -64,7 +65,7 @@ namespace dice {
                 } else {
                     dice::msg_queue::MsgQueue.add(
                         e.target,
-                        utils::format_string(
+                        utils::format_string( // 不存在对应卡片
                             msg::GetGlobalMsg("strNickSet"),
                             {{"old_nick", old_nick},
                              {"new_nick", nick_name},
