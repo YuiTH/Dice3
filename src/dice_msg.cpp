@@ -65,7 +65,7 @@ namespace dice::msg {
             {"strHardSuccess", "困难成功"},
             {"strExtremeSuccess", "极难成功"},
             {"strCriticalSuccess", "大成功"},
-            {"strSanityCheck","\"{nick}\"的SAN Check:\n1d100={check_val} {check_res}\n\"{nick}\"的San值{str_san_change}点，当前剩余{san_left}点"}
+            {"strSanityCheck","\"{nick}\"的SAN Check:\n1d100={check_val} {check_res}\n{str_san_change}\n\"{nick}\"的San值{before_san}->{after_san}"}
         }; // namespace dice::msg
 
 const std::map<std::string, std::string> help_msg{

@@ -12,10 +12,11 @@ namespace dice {
     public:
         int roll_res=0;
         bool bool_res = false;
-        int check_value = 0;
+        int check_val = 0;
         int current_san = 0;
         bool match(const cq::event::MessageEvent& e, const std::wstring& ws) override;
         void process(const cq::event::MessageEvent& e, const std::wstring& ws) override;
         bool check(const cq::event::MessageEvent& e);
+        int roll_exp2int(const std::wstring&);
     };
 }

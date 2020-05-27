@@ -3,7 +3,8 @@
 .vscode/c_cpp_properties.json
 .vscode/.ropeproject
 .vscode/ipch
-vcpkg
+vcpkg/*
+.idea/*
 build
 !lib/*.lib
 scripts/install.ps1
